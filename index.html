@@ -1,0 +1,1935 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f4">
+  <title>Hợp đồng &amp; Thanh toán Escrow · Mini-Upwork (Phase 3 &amp; 4)</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, "Segoe UI", sans-serif;
+      color: #172b22;
+      background: #f7f8f4;
+      line-height: 1.5;
+      --ink: #172b22;
+      --muted: #50655a;
+      --paper: #fff;
+      --line: #dce5da;
+      --accent: #12603e;
+      --forest: #103b2a;
+      --lime: #c6f387;
+      --tint: #eff6eb;
+      --display: Baskervville, Georgia, serif;
+      --warn-bg: #fff8e6;
+      --warn-ink: #7a4f01;
+      --warn-line: #f0d899;
+      --danger-bg: #fff2ef;
+      --danger-ink: #792924;
+      --danger-line: #f2d9d3;
+      --info-bg: #eef5fc;
+      --info-ink: #174978;
+      --info-line: #cbe0f5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: #f7f8f4; color: var(--ink); }
+    body:has(dialog[open]) { overflow: hidden; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: 0.52; cursor: default; }
+    :focus-visible { outline: 2px solid #279362; outline-offset: 3px; }
+    a { color: inherit; }
+    h1, h2, h3, h4, p { margin: 0; }
+    .shell { width: min(1216px, calc(100% - 72px)); margin-inline: auto; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+    /* Topbar đồng nhất 100% với MiniUpwork_Phase4_Dat */
+    .topbar { background: var(--paper); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+    .topbar-inner { min-height: 70px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+    .brand { display: inline-flex; align-items: center; text-decoration: none; font-size: 1.27rem; font-weight: 760; letter-spacing: -0.045em; white-space: nowrap; background: none; border: 0; padding: 0; color: var(--ink); }
+    .brand-accent { color: var(--accent); }
+    .brand-mark { background: var(--forest); width: 29px; height: 29px; padding: 6px; margin-right: 9px; display: flex; align-items: end; justify-content: center; gap: 2px; border-radius: 8px; }
+    .brand-mark i { display: block; width: 4px; border-radius: 4px; background: var(--lime); transform: skew(-17deg); }
+    .brand-mark i:nth-child(1) { height: 8px; }
+    .brand-mark i:nth-child(2) { height: 12px; }
+    .brand-mark i:nth-child(3) { height: 16px; }
+    .navigation { display: flex; gap: 22px; align-self: stretch; align-items: center; font-size: 0.89rem; }
+    .nav-btn { display: inline-flex; height: 70px; align-items: center; position: relative; color: var(--muted); text-decoration: none; white-space: nowrap; background: none; border: 0; padding: 0 2px; font-weight: 550; }
+    .nav-btn:hover { color: var(--accent); }
+    .nav-btn[aria-current="page"] { color: var(--forest); font-weight: 680; }
+    .nav-btn[aria-current="page"]::after { content: ""; position: absolute; inset: auto 0 -1px; height: 2px; background: var(--accent); }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .connection { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 0.79rem; font-weight: 600; white-space: nowrap; }
+    .connection::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8b9891; }
+    .connection[data-state="ready"]::before { background: #27955a; box-shadow: 0 0 0 3px #eaf5e7; }
+    .connection[data-state="error"]::before { background: #b03d35; }
+
+    /* Buttons & Badges đồng nhất */
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; min-height: 40px; padding: 8px 16px; border: 1px solid transparent; border-radius: 8px; font-size: 0.88rem; font-weight: 680; white-space: nowrap; transition: background 120ms ease, border-color 120ms ease, transform 80ms ease; }
+    .button:active:not(:disabled) { transform: translateY(1px); }
+    .button-lime { color: #15351f; background: var(--lime); }
+    .button-lime:hover:not(:disabled) { background: #b8eb76; }
+    .button-green { color: #fff; background: var(--accent); }
+    .button-green:hover:not(:disabled) { background: #0c4b2e; }
+    .button-outline { color: var(--accent); background: var(--paper); border-color: #b9cdbb; }
+    .button-outline:hover:not(:disabled) { background: var(--tint); }
+    .button-ghost-light { color: #fbfff4; background: rgba(255, 255, 255, 0.12); border-color: rgba(198, 243, 135, 0.35); }
+    .button-ghost-light:hover:not(:disabled) { background: rgba(255, 255, 255, 0.2); }
+    .button-ghost-light[aria-pressed="true"] { color: #15351f; background: var(--lime); border-color: var(--lime); }
+    .button-sm { min-height: 33px; padding: 5px 11px; font-size: 0.81rem; border-radius: 7px; }
+    .text-button { appearance: none; padding: 0; color: var(--accent); background: none; border: none; font-size: 0.85rem; font-weight: 650; }
+    .text-button:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Phần 1: Hero Header & Contract Switcher */
+    .hero { margin-top: 26px; position: relative; isolation: isolate; overflow: hidden; padding: 30px 38px 32px; border-radius: 19px; background: linear-gradient(100deg, #113d2b 20%, #215742 100%); color: #fbfff4; }
+    .hero-content { position: relative; z-index: 1; display: grid; gap: 18px; }
+    .hero-top-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+    .contract-switcher { display: inline-flex; flex-wrap: wrap; gap: 8px; padding: 5px; border-radius: 11px; background: rgba(10, 34, 23, 0.45); border: 1px solid rgba(198, 243, 135, 0.24); }
+    .hero-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 99px; font-size: 0.78rem; font-weight: 680; background: rgba(255, 255, 255, 0.14); color: #e9f8dc; border: 1px solid rgba(198, 243, 135, 0.3); }
+    .hero-badge.lime { background: var(--lime); color: #13331f; border-color: transparent; }
+    .hero h1 { font-family: var(--display); font-weight: 400; letter-spacing: -0.04em; color: #fbfff4; font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1.07; }
+    .hero-parties { display: flex; flex-wrap: wrap; gap: 12px 28px; padding-top: 4px; color: #d9ecdf; font-size: 0.92rem; }
+    .hero-parties strong { color: #fff; font-weight: 680; }
+    .hero-art { position: absolute; z-index: -1; inset: 0 0 0 58%; overflow: hidden; opacity: 0.82; pointer-events: none; }
+    .hero-art i { position: absolute; width: 235px; height: 420px; left: 26%; top: -110px; border: 1px solid #a2d789; border-radius: 57% 43% 48% 52%; transform: rotate(44deg); }
+    .hero-art i:nth-child(2) { left: 34%; top: -125px; border-color: #7ab17a; }
+    .hero-art i:nth-child(3) { left: 42%; top: -140px; border-color: #78a97f; }
+    .hero-art i:nth-child(4) { left: 50%; top: -155px; border-color: #6b9e73; }
+
+    /* 4 Thẻ tóm tắt tài chính (KPI Cards) */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+    .kpi-card { background: var(--paper); border: 1px solid var(--line); border-radius: 13px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; position: relative; overflow: hidden; transition: border-color 150ms ease, box-shadow 150ms ease; }
+    .kpi-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--accent); }
+    .kpi-card[data-tone="escrow"]::before { background: #d48b07; }
+    .kpi-card[data-tone="paid"]::before { background: #1d8348; }
+    .kpi-card[data-tone="remaining"]::before { background: #225c8f; }
+    .kpi-label { color: var(--muted); font-size: 0.82rem; font-weight: 640; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .kpi-tag { font-size: 0.71rem; font-weight: 680; padding: 2px 7px; border-radius: 99px; background: var(--tint); color: var(--accent); }
+    .kpi-value { font-size: clamp(1.35rem, 2.2vw, 1.78rem); font-weight: 760; letter-spacing: -0.03em; color: var(--ink); margin-top: 2px; }
+    .kpi-sub { color: var(--muted); font-size: 0.78rem; line-height: 1.35; }
+
+    /* Thông báo trạng thái (Notice) */
+    .notice { color: var(--muted); font-size: 0.9rem; padding: 12px 15px; border: 1px solid #e1e9df; border-radius: 10px; background: #f4f7f2; margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .notice[data-state="error"] { color: var(--danger-ink); background: var(--danger-bg); border-color: var(--danger-line); }
+    .notice[data-state="success"] { color: #185a3a; background: #eaf7ee; border-color: #c6e6d0; }
+    .notice[data-state="warn"] { color: var(--warn-ink); background: var(--warn-bg); border-color: var(--warn-line); }
+
+    /* Phần 2: Khu vực nội dung chính (Tabs) */
+    .workspace-section { margin-top: 24px; padding-bottom: 68px; }
+    .tabs-bar { display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 20px; align-items: center; justify-content: space-between; }
+    .tabs-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 0.88rem; font-weight: 660; transition: all 120ms ease; }
+    .tab-btn:hover { color: var(--accent); border-color: #b9cdbb; background: #fafcf8; }
+    .tab-btn[aria-selected="true"] { background: var(--forest); color: #fbfff4; border-color: var(--forest); }
+    .tab-count { display: inline-flex; align-items: center; justify-content: center; min-width: 21px; height: 21px; padding: 0 6px; border-radius: 99px; font-size: 0.74rem; font-weight: 700; background: var(--tint); color: var(--accent); }
+    .tab-btn[aria-selected="true"] .tab-count { background: var(--lime); color: #143520; }
+
+    /* Card & Panel dùng chung */
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; }
+    .panel + .panel { margin-top: 18px; }
+    .panel-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+    .panel-title { font-size: 1.18rem; font-weight: 720; letter-spacing: -0.02em; color: var(--forest); }
+    .panel-subtitle { color: var(--muted); font-size: 0.86rem; margin-top: 3px; }
+
+    /* Status Badges (Milestone, Escrow, Invoice, Payment) */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 680; letter-spacing: 0.01em; border: 1px solid transparent; white-space: nowrap; }
+    .badge-approved, .badge-released, .badge-paid, .badge-success { background: #eaf7ee; color: #165b37; border-color: #c5e6d0; }
+    .badge-submitted, .badge-funded, .badge-sent { background: var(--info-bg); color: var(--info-ink); border-color: var(--info-line); }
+    .badge-in_progress, .badge-partial, .badge-pending { background: var(--warn-bg); color: var(--warn-ink); border-color: var(--warn-line); }
+    .badge-unfunded, .badge-draft { background: #f1f4f0; color: #4c5f54; border-color: #d7e0d5; }
+    .badge-overdue, .badge-failed, .badge-refunded { background: var(--danger-bg); color: var(--danger-ink); border-color: var(--danger-line); }
+
+    /* Danh sách thẻ Milestone theo chiều dọc (Fixed Contract) */
+    .milestone-list { display: grid; gap: 16px; list-style: none; padding: 0; margin: 0; }
+    .milestone-card { background: var(--paper); border: 1px solid var(--line); border-radius: 13px; padding: 20px 22px; display: grid; gap: 14px; transition: border-color 140ms ease, box-shadow 140ms ease; }
+    .milestone-card:hover { border-color: #b8ccb9; box-shadow: 0 4px 16px rgba(16, 59, 42, 0.05); }
+    .milestone-card[data-overdue="true"] { border-left: 4px solid #c0392b; }
+    .milestone-card[data-status="APPROVED"] { border-left: 4px solid #1e8449; }
+    .milestone-card[data-status="SUBMITTED"] { border-left: 4px solid #1f618d; }
+    .milestone-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .milestone-heading { display: grid; gap: 5px; }
+    .milestone-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
+    .milestone-title { font-size: 1.08rem; font-weight: 720; color: #1b442c; }
+    .milestone-amount-box { text-align: right; }
+    .milestone-amount { font-size: 1.24rem; font-weight: 760; color: var(--ink); letter-spacing: -0.02em; }
+    .milestone-due { font-size: 0.8rem; color: var(--muted); }
+
+    /* Thanh bước State Machine trên mỗi Milestone */
+    .stepper { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 11px 13px; background: #f6f9f4; border: 1px solid #e3ece0; border-radius: 9px; }
+    .step-item { display: flex; align-items: center; gap: 7px; font-size: 0.78rem; color: var(--muted); font-weight: 560; }
+    .step-dot { width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; background: #e1e9df; color: #4c5f54; flex-shrink: 0; }
+    .step-item[data-active="true"] { color: var(--forest); font-weight: 720; }
+    .step-item[data-active="true"] .step-dot { background: var(--accent); color: #fff; box-shadow: 0 0 0 3px #dff0e4; }
+    .step-item[data-done="true"] { color: #196f3d; }
+    .step-item[data-done="true"] .step-dot { background: #c6f387; color: #143520; }
+
+    .milestone-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid #edf2eb; }
+    .escrow-info { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--muted); }
+    .milestone-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+    /* Khung Đánh giá Inline (Bước 4 State Machine) */
+    .inline-review-box { margin-top: 6px; padding: 16px 18px; border-radius: 10px; background: var(--tint); border: 1px solid #cbe0c8; display: grid; gap: 12px; }
+    .inline-review-grid { display: grid; grid-template-columns: 180px 180px minmax(0, 1fr); gap: 12px; align-items: start; }
+    .form-field { display: grid; gap: 5px; font-size: 0.84rem; font-weight: 650; color: var(--ink); }
+    .form-field input, .form-field select, .form-field textarea { width: 100%; min-height: 38px; border: 1px solid #b9ccbd; border-radius: 7px; padding: 7px 10px; color: var(--ink); background: var(--paper); font-weight: 400; }
+    .form-field textarea { min-height: 70px; resize: vertical; }
+
+    /* Bố cục Hợp đồng theo giờ (Hourly Contract): Bảng Time Entries + Hourly Invoice Preview */
+    .hourly-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, 1fr); gap: 20px; align-items: start; }
+    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); }
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; text-align: left; }
+    table.data-table th { background: #f3f7f0; color: var(--forest); font-weight: 690; font-size: 0.79rem; text-transform: uppercase; letter-spacing: 0.02em; padding: 11px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    table.data-table td { padding: 12px 14px; border-bottom: 1px solid #edf2eb; vertical-align: middle; color: var(--ink); }
+    table.data-table tbody tr:last-child td { border-bottom: 0; }
+    table.data-table tbody tr:hover { background: #f9fbf7; }
+    table.data-table tfoot td { background: #f6f9f4; font-weight: 700; border-top: 1px solid var(--line); padding: 12px 14px; }
+    .num { text-align: right !important; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    /* Khung Xem trước Hóa đơn theo giờ (Hourly Invoice Preview) */
+    .invoice-preview-card { background: var(--paper); border: 1px solid var(--line); border-radius: 13px; overflow: hidden; position: sticky; top: 90px; }
+    .invoice-preview-head { background: linear-gradient(100deg, #113d2b 20%, #215742 100%); color: #fbfff4; padding: 18px 20px; display: grid; gap: 6px; }
+    .invoice-preview-head h3 { font-family: var(--display); font-size: 1.35rem; font-weight: 400; color: #fbfff4; }
+    .invoice-preview-body { padding: 18px 20px; display: grid; gap: 14px; }
+    .invoice-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+    .invoice-line { display: flex; justify-content: space-between; gap: 10px; font-size: 0.84rem; padding-bottom: 8px; border-bottom: 1px dashed var(--line); }
+    .invoice-summary { background: #f4f8f1; border: 1px solid #d8e6d4; border-radius: 9px; padding: 12px 14px; display: grid; gap: 7px; font-size: 0.86rem; }
+    .invoice-summary-row { display: flex; justify-content: space-between; align-items: center; }
+    .invoice-summary-row.total { font-size: 1.06rem; font-weight: 760; color: var(--forest); border-top: 1px solid #c9dcc4; padding-top: 7px; margin-top: 2px; }
+
+    /* Danh sách Reviews */
+    .reviews-grid { display: grid; gap: 14px; list-style: none; padding: 0; margin: 0; }
+    .review-card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 11px; background: #fbfcfa; display: grid; gap: 8px; }
+    .review-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .stars { color: #d48b07; font-size: 1rem; letter-spacing: 1px; font-weight: 700; }
+
+    /* Khu vực SQL & JSON Phase 3 */
+    .sql-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .sql-card { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; display: grid; gap: 11px; }
+    .code-block { background: #12241b; color: #e5f4e3; padding: 13px 15px; border-radius: 9px; font-family: Consolas, Monaco, "Courier New", monospace; font-size: 0.79rem; line-height: 1.48; overflow-x: auto; white-space: pre; margin: 0; max-height: 280px; }
+
+    @media (max-width: 960px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hourly-layout { grid-template-columns: 1fr; }
+      .sql-grid { grid-template-columns: 1fr; }
+      .inline-review-grid { grid-template-columns: 1fr; }
+      .stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 650px) {
+      .shell { width: calc(100% - 28px); }
+      .hero { padding: 22px 18px; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .stepper { grid-template-columns: 1fr; }
+      .navigation { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPBAR ĐỒNG NHẤT VỚI MINI-UPWORK PHASE 4 -->
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <button type="button" class="brand" id="brand-home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Mini<span class="brand-accent">Upwork</span>
+      </button>
+      <nav aria-label="Điều hướng chính" class="navigation">
+        <button type="button" class="nav-btn" data-nav-tab="progress" aria-current="page">Hợp đồng &amp; Thanh toán</button>
+        <button type="button" class="nav-btn" data-nav-tab="history">Hóa đơn &amp; Giao dịch</button>
+        <button type="button" class="nav-btn" data-nav-tab="reviews">Đánh giá (Reviews)</button>
+        <button type="button" class="nav-btn" data-nav-tab="sql">SQL &amp; JSON (Phase 3)</button>
+      </nav>
+      <div class="topbar-right">
+        <button type="button" class="button button-outline button-sm" id="reset-demo-btn" title="Khôi phục lại dữ liệu mẫu Seed Data ban đầu">↺ Khôi phục Seed Data</button>
+        <span class="connection" id="connection" data-state="ready" role="status">Đã kết nối CSDL · Phase 3 &amp; 4</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- =======================================================================
+         PHẦN 1: HEADER HỢP ĐỒNG & 4 THẺ TÓM TẮT TÀI CHÍNH (KPI CARDS)
+         ======================================================================= -->
+    <section class="hero" aria-labelledby="contract-title">
+      <div class="hero-content">
+        <div class="hero-top-row">
+          <div class="hero-badges">
+            <span class="hero-badge lime" id="header-contract-type">HỢP ĐỒNG TRỌN GÓI (FIXED)</span>
+            <span class="hero-badge" id="header-contract-id">Mã HĐ: #1</span>
+            <span class="hero-badge" id="header-contract-status">Trạng thái: ACTIVE</span>
+          </div>
+          <!-- Nút chuyển đổi nhanh giữa Demo Hợp đồng trọn gói và Demo Hợp đồng theo giờ -->
+          <div class="contract-switcher" role="group" aria-label="Chuyển đổi hợp đồng demo">
+            <button type="button" class="button button-ghost-light button-sm" id="switch-fixed-btn" aria-pressed="true">
+              1. Demo Hợp đồng trọn gói (3.000$)
+            </button>
+            <button type="button" class="button button-ghost-light button-sm" id="switch-hourly-btn" aria-pressed="false">
+              2. Demo Hợp đồng theo giờ (25$/giờ)
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <h1 id="contract-title">Thiết kế Website Bán Hàng</h1>
+          <div class="hero-parties">
+            <span>Khách hàng (Client): <strong id="contract-client">Demo Studio 1 · Công ty TNHH Thương mại Điện tử Việt</strong></span>
+            <span>Freelancer: <strong id="contract-freelancer">Trần Quang Huy · #5</strong></span>
+            <span>Ngày hiệu lực: <strong id="contract-created">20/09/2026</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <!-- 4 THẺ KPI TỰ ĐỘNG CẬP NHẬT -->
+    <section class="kpi-grid" aria-label="Thẻ tóm tắt tài chính">
+      <article class="kpi-card" data-tone="total">
+        <div class="kpi-label">
+          <span id="kpi-total-label">Tổng giá trị hợp đồng</span>
+          <span class="kpi-tag" id="kpi-total-tag">FIXED</span>
+        </div>
+        <p class="kpi-value" id="kpi-total-value">3.000,00 USD</p>
+        <p class="kpi-sub" id="kpi-total-sub">Ngân sách cam kết cho 3 cột mốc (Milestones)</p>
+      </article>
+
+      <article class="kpi-card" data-tone="escrow">
+        <div class="kpi-label">
+          <span>Đang giữ ký quỹ (Escrow)</span>
+          <span class="kpi-tag">FUNDED</span>
+        </div>
+        <p class="kpi-value" id="kpi-escrow-value">1.000,00 USD</p>
+        <p class="kpi-sub" id="kpi-escrow-sub">1 cột mốc đang giữ tiền trong tài khoản ký quỹ</p>
+      </article>
+
+      <article class="kpi-card" data-tone="paid">
+        <div class="kpi-label">
+          <span>Đã giải ngân (Paid)</span>
+          <span class="kpi-tag">RELEASED / PAID</span>
+        </div>
+        <p class="kpi-value" id="kpi-paid-value">1.000,00 USD</p>
+        <p class="kpi-sub" id="kpi-paid-sub">Tổng thanh toán thành công (status = SUCCESS)</p>
+      </article>
+
+      <article class="kpi-card" data-tone="remaining">
+        <div class="kpi-label">
+          <span>Còn lại (Remaining)</span>
+          <span class="kpi-tag" id="kpi-remaining-tag">UNFUNDED</span>
+        </div>
+        <p class="kpi-value" id="kpi-remaining-value">1.000,00 USD</p>
+        <p class="kpi-sub" id="kpi-remaining-sub">Chưa nạp Escrow: 1.000$ · Chưa giải ngân: 2.000$</p>
+      </article>
+    </section>
+
+    <!-- Thông báo phản hồi thao tác (State Machine / Xuất hóa đơn / Đánh giá) -->
+    <div id="action-notice" class="notice" data-state="success" role="status" hidden>
+      <span id="action-notice-text"></span>
+      <button type="button" class="text-button" id="close-notice-btn">Đóng</button>
+    </div>
+
+    <!-- =======================================================================
+         PHẦN 2: KHU VỰC NỘI DUNG CHÍNH (CHIA TAB)
+         ======================================================================= -->
+    <section class="workspace-section" aria-label="Chi tiết tiến độ, hóa đơn và đánh giá">
+      <div class="tabs-bar">
+        <div class="tabs-list" role="tablist" aria-label="Các phân hệ chi tiết hợp đồng">
+          <button type="button" role="tab" class="tab-btn" id="tab-btn-progress" aria-selected="true" aria-controls="tab-panel-progress">
+            Tab 1 · Tiến độ &amp; Thanh toán <span class="tab-count" id="badge-count-progress">3</span>
+          </button>
+          <button type="button" role="tab" class="tab-btn" id="tab-btn-history" aria-selected="false" aria-controls="tab-panel-history">
+            Tab 2 · Lịch sử Hóa đơn &amp; Giao dịch <span class="tab-count" id="badge-count-history">2</span>
+          </button>
+          <button type="button" role="tab" class="tab-btn" id="tab-btn-reviews" aria-selected="false" aria-controls="tab-panel-reviews">
+            Tab 3 · Đánh giá (Reviews) <span class="tab-count" id="badge-count-reviews">1</span>
+          </button>
+          <button type="button" role="tab" class="tab-btn" id="tab-btn-sql" aria-selected="false" aria-controls="tab-panel-sql">
+            Kiểm chứng 4 Truy vấn SQL &amp; JSON <span class="tab-count">4</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           TAB 1: TIẾN ĐỘ & THANH TOÁN (MILESTONES / TIME ENTRIES)
+           ===================================================================== -->
+      <div id="tab-panel-progress" role="tabpanel" aria-labelledby="tab-btn-progress">
+        <!-- KHỐI HỢP ĐỒNG TRỌN GÓI (FIXED CONTRACT VIEW) -->
+        <div id="fixed-progress-view" class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Danh sách Cột mốc trọn gói (Milestones) &amp; Vòng đời Ký quỹ (Escrow State Machine)</h2>
+              <p class="panel-subtitle">
+                Mô phỏng trực tiếp 4 bước chuyển đổi trạng thái: (1) Nạp ký quỹ → (2) Nộp sản phẩm → (3) Nghiệm thu &amp; Giải ngân → (4) Gửi đánh giá.
+              </p>
+            </div>
+            <button type="button" class="button button-outline button-sm" id="add-demo-milestone-btn">
+              + Tạo thêm Milestone mới (PENDING + UNFUNDED)
+            </button>
+          </div>
+          <ul class="milestone-list" id="milestone-list-container"></ul>
+        </div>
+
+        <!-- KHỐI HỢP ĐỒNG THEO GIỜ (HOURLY CONTRACT VIEW) -->
+        <div id="hourly-progress-view" hidden>
+          <div class="hourly-layout">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">Bảng Chấm công theo giờ (Time Entries)</h2>
+                  <p class="panel-subtitle">
+                    Mấu chốt thiết kế: Cột <code>invoice_id = NULL</code> khi mới chấm công. Khi xuất hóa đơn mới cập nhật ID hóa đơn vào dòng chấm công.
+                  </p>
+                </div>
+                <button type="button" class="button button-outline button-sm" id="toggle-add-time-btn">
+                  + Chấm công giờ làm mới
+                </button>
+              </div>
+
+              <!-- Form chấm công mới -->
+              <form id="add-time-form" class="inline-review-box" hidden>
+                <h4>Thêm bản ghi chấm công mới (status = APPROVED, invoice_id = NULL)</h4>
+                <div class="inline-review-grid">
+                  <label class="form-field">
+                    <span>Ngày làm việc (work_date)</span>
+                    <input type="date" id="new-time-date" value="2026-11-16" required>
+                  </label>
+                  <label class="form-field">
+                    <span>Số giờ (hours)</span>
+                    <input type="number" id="new-time-hours" min="0.5" max="24" step="0.5" value="2.0" required>
+                  </label>
+                  <label class="form-field">
+                    <span>Mô tả công việc (description)</span>
+                    <input type="text" id="new-time-desc" placeholder="Ví dụ: Viết tài liệu API và kiểm thử tích hợp Phase 4" required>
+                  </label>
+                </div>
+                <div class="milestone-actions">
+                  <button type="submit" class="button button-green button-sm">Lưu dòng chấm công</button>
+                  <button type="button" class="button button-outline button-sm" id="cancel-add-time-btn">Hủy</button>
+                </div>
+              </form>
+
+              <div class="table-wrap" style="margin-top: 12px;">
+                <table class="data-table" aria-label="Bảng chấm công theo giờ">
+                  <thead>
+                    <tr>
+                      <th>Mã</th>
+                      <th>Ngày</th>
+                      <th>Mô tả công việc</th>
+                      <th class="num">Số giờ</th>
+                      <th class="num">Thành tiền</th>
+                      <th>Duyệt</th>
+                      <th>Trạng thái hóa đơn</th>
+                    </tr>
+                  </thead>
+                  <tbody id="time-entries-tbody"></tbody>
+                  <tfoot id="time-entries-tfoot"></tfoot>
+                </table>
+              </div>
+            </div>
+
+            <!-- Khung Xem trước Hóa đơn theo giờ (Hourly Invoice Preview) -->
+            <aside class="invoice-preview-card" aria-label="Khung xem trước hóa đơn theo giờ">
+              <div class="invoice-preview-head">
+                <span class="hero-badge lime" style="justify-self: start;">HOURLY INVOICE PREVIEW</span>
+                <h3 id="hourly-preview-title">Xem trước Hóa đơn theo giờ</h3>
+                <p style="font-size: 0.82rem; color: #d9ecdf;" id="hourly-preview-subtitle">
+                  Tự động cộng tổng từ các dòng chấm công (Đơn giá: 25,00 USD/giờ)
+                </p>
+              </div>
+              <div class="invoice-preview-body">
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="button button-outline button-sm" id="preview-mode-unbilled" style="flex: 1;">
+                    Giờ chưa lập HĐ (6h)
+                  </button>
+                  <button type="button" class="button button-outline button-sm" id="preview-mode-billed" style="flex: 1;">
+                    HĐ đã xuất #1 (10h)
+                  </button>
+                </div>
+
+                <ul class="invoice-lines" id="hourly-invoice-lines"></ul>
+
+                <div class="invoice-summary" id="hourly-invoice-summary"></div>
+
+                <button type="button" class="button button-green" id="generate-hourly-invoice-btn">
+                  Xuất Hóa đơn &amp; Thanh toán giờ chưa lập HĐ
+                </button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           TAB 2: LỊCH SỬ HÓA ĐƠN & GIAO DỊCH (INVOICES & PAYMENTS)
+           ===================================================================== -->
+      <div id="tab-panel-history" role="tabpanel" aria-labelledby="tab-btn-history" hidden>
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Danh sách Hóa đơn (Invoices) &amp; Đối soát Thanh toán</h2>
+              <p class="panel-subtitle">
+                Liệt kê các hóa đơn của hợp đồng hiện tại kèm trạng thái đối soát với tổng tiền giao dịch <code>status = 'SUCCESS'</code>.
+              </p>
+            </div>
+            <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 650; color: var(--forest); cursor: pointer;">
+              <input type="checkbox" id="show-all-invoices-toggle" checked>
+              Hiển thị toàn bộ Hóa đơn cả 2 Hợp đồng (Bao gồm HĐ lệch tiền #3)
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table" aria-label="Bảng danh sách hóa đơn">
+              <thead>
+                <tr>
+                  <th>Mã HĐ</th>
+                  <th>Số Hóa đơn</th>
+                  <th>Hợp đồng / Cột mốc</th>
+                  <th>Ngày phát hành</th>
+                  <th>Hạn thanh toán</th>
+                  <th class="num">Tổng tiền HĐ</th>
+                  <th class="num">Đã thu (SUCCESS)</th>
+                  <th class="num">Chênh lệch</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="invoices-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Lịch sử Giao dịch Thanh toán (Payments)</h2>
+              <p class="panel-subtitle">
+                Ghi nhận toàn bộ giao dịch giải ngân ký quỹ (<code>ESCROW_RELEASE</code>), chuyển khoản (<code>BANK_TRANSFER</code>) và thẻ tín dụng (<code>CREDIT_CARD</code>).
+              </p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table" aria-label="Bảng lịch sử giao dịch thanh toán">
+              <thead>
+                <tr>
+                  <th>Mã GD</th>
+                  <th>Hóa đơn</th>
+                  <th>Phương thức (payment_method)</th>
+                  <th>Thời gian (paid_at)</th>
+                  <th class="num">Số tiền (paid_amount)</th>
+                  <th>Trạng thái (status)</th>
+                </tr>
+              </thead>
+              <tbody id="payments-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           TAB 3: ĐÁNH GIÁ (REVIEWS)
+           ===================================================================== -->
+      <div id="tab-panel-reviews" role="tabpanel" aria-labelledby="tab-btn-reviews" hidden>
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Đánh giá tín nhiệm hai chiều (Client &amp; Freelancer Reviews)</h2>
+              <p class="panel-subtitle" id="reviews-summary-subtitle">
+                Điểm trung bình: 5.0 / 5.0 ★
+              </p>
+            </div>
+          </div>
+
+          <ul class="reviews-grid" id="reviews-list-container"></ul>
+
+          <form id="tab-review-form" class="inline-review-box" style="margin-top: 20px;">
+            <h4>Gửi đánh giá mới cho hợp đồng đang chọn</h4>
+            <div class="inline-review-grid">
+              <label class="form-field">
+                <span>Vai trò người đánh giá (reviewer_role)</span>
+                <select id="tab-review-role">
+                  <option value="CLIENT">CLIENT (Khách hàng)</option>
+                  <option value="FREELANCER">FREELANCER (Người làm)</option>
+                </select>
+              </label>
+              <label class="form-field">
+                <span>Số sao (rating: 1 đến 5)</span>
+                <select id="tab-review-rating">
+                  <option value="5">5 Sao (★★★★★ - Xuất sắc)</option>
+                  <option value="4">4 Sao (★★★★☆ - Tốt)</option>
+                  <option value="3">3 Sao (★★★☆☆ - Đạt yêu cầu)</option>
+                  <option value="2">2 Sao (★★☆☆☆ - Cần cải thiện)</option>
+                  <option value="1">1 Sao (★☆☆☆☆ - Không hài lòng)</option>
+                </select>
+              </label>
+              <label class="form-field">
+                <span>Nhận xét chi tiết (comment)</span>
+                <input type="text" id="tab-review-comment" placeholder="Nhập nhận xét về chất lượng bàn giao và tiến độ hợp tác..." required>
+              </label>
+            </div>
+            <div>
+              <button type="submit" class="button button-green button-sm">Gửi đánh giá vào CSDL</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           TAB 4: KIỂM CHỨNG 4 CÂU TRUY VẤN SQL NGHIỆP VỤ & JSON CHUẨN HÓA (PHASE 3)
+           ===================================================================== -->
+      <div id="tab-panel-sql" role="tabpanel" aria-labelledby="tab-btn-sql" hidden>
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Kết quả Thực thi Trực tiếp 4 Câu Truy vấn SQL Nghiệp vụ (Bước 3)</h2>
+              <p class="panel-subtitle">
+                Kết quả bên dưới được tính toán động theo thời gian thực từ trạng thái dữ liệu hiện tại (thay đổi ngay khi bạn bấm Giải ngân hoặc Xuất hóa đơn ở Tab 1).
+              </p>
+            </div>
+          </div>
+
+          <div class="sql-grid">
+            <!-- Q1 -->
+            <div class="sql-card">
+              <div>
+                <span class="badge badge-overdue">TRUY VẤN 1 · MILESTONE QUÁ HẠN</span>
+                <h3 style="margin-top: 6px; font-size: 1rem;">1. Lọc Milestone có <code>due_date &lt; CURRENT_DATE</code> và <code>status &lt;&gt; 'APPROVED'</code></h3>
+              </div>
+              <pre class="code-block">SELECT m.id, c.title AS contract_title, m.title, m.amount,
+       m.due_date, m.status, (CURRENT_DATE - m.due_date) AS days_overdue
+FROM miniupwork.milestones m
+JOIN miniupwork.contracts c ON c.id = m.contract_id
+WHERE m.due_date &lt; CURRENT_DATE AND m.status &lt;&gt; 'APPROVED';</pre>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>ID</th><th>Cột mốc</th><th>Hạn chót</th><th>Trạng thái</th><th class="num">Trễ hạn</th></tr>
+                  </thead>
+                  <tbody id="sql-q1-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="sql-card">
+              <div>
+                <span class="badge badge-in_progress">TRUY VẤN 2 · GIỜ CHƯA LẬP HÓA ĐƠN</span>
+                <h3 style="margin-top: 6px; font-size: 1rem;">2. Lọc Time Entries có <code>invoice_id IS NULL</code> và <code>status = 'APPROVED'</code></h3>
+              </div>
+              <pre class="code-block">SELECT t.id, c.title, t.work_date, t.hours, c.hourly_rate,
+       ROUND(t.hours * c.hourly_rate, 2) AS unbilled_amount
+FROM miniupwork.time_entries t
+JOIN miniupwork.contracts c ON c.id = t.contract_id
+WHERE t.invoice_id IS NULL AND t.status = 'APPROVED';</pre>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>ID</th><th>Ngày</th><th>Mô tả</th><th class="num">Giờ × Giá</th><th class="num">Tạm tính</th></tr>
+                  </thead>
+                  <tbody id="sql-q2-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="sql-card">
+              <div>
+                <span class="badge badge-submitted">TRUY VẤN 3 · ĐỐI SOÁT THANH TOÁN</span>
+                <h3 style="margin-top: 6px; font-size: 1rem;">3. <code>LEFT JOIN</code> Invoices sang Payments (<code>SUCCESS</code>), lọc hiệu số <code>&lt;&gt; 0</code></h3>
+              </div>
+              <pre class="code-block">SELECT i.id, i.invoice_number, i.total_amount,
+       COALESCE(SUM(p.paid_amount), 0) AS total_paid,
+       (i.total_amount - COALESCE(SUM(p.paid_amount), 0)) AS discrepancy
+FROM miniupwork.invoices i
+LEFT JOIN miniupwork.payments p
+  ON p.invoice_id = i.id AND p.status = 'SUCCESS'
+GROUP BY i.id, i.invoice_number, i.total_amount
+HAVING (i.total_amount - COALESCE(SUM(p.paid_amount), 0)) &lt;&gt; 0;</pre>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Số HĐ</th><th class="num">Tổng HĐ</th><th class="num">Đã thu</th><th class="num">Lệch</th><th>Kết luận</th></tr>
+                  </thead>
+                  <tbody id="sql-q3-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="sql-card">
+              <div>
+                <span class="badge badge-approved">TRUY VẤN 4 · DOANH THU THEO KỲ</span>
+                <h3 style="margin-top: 6px; font-size: 1rem;">4. Tổng hợp <code>SUM(paid_amount)</code> theo kỳ tháng/năm (<code>status = 'SUCCESS'</code>)</h3>
+              </div>
+              <pre class="code-block">SELECT TO_CHAR(DATE_TRUNC('month', p.paid_at), 'YYYY-MM') AS period,
+       COUNT(p.id) AS tx_count, SUM(p.paid_amount) AS total_revenue
+FROM miniupwork.payments p
+WHERE p.status = 'SUCCESS'
+GROUP BY DATE_TRUNC('month', p.paid_at)
+ORDER BY period;</pre>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Kỳ (Tháng/Năm)</th><th class="num">Số giao dịch SUCCESS</th><th class="num">Tổng doanh thu</th></tr>
+                  </thead>
+                  <tbody id="sql-q4-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Khối xem cấu trúc JSON chuẩn hóa (Bước 4) -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Cấu trúc Dữ liệu Mẫu Chuẩn hóa cho Frontend (Bước 4: <code>fixedContract</code> &amp; <code>hourlyContract</code>)</h2>
+              <p class="panel-subtitle">
+                Tên thuộc tính (key) khớp 100% với tên cột trong SQL DDL 7 bảng, tự động cập nhật theo trạng thái hiện hành trên giao diện.
+              </p>
+            </div>
+            <button type="button" class="button button-outline button-sm" id="copy-json-btn">Sao chép JSON hiện tại</button>
+          </div>
+          <pre class="code-block" id="json-preview-block" style="max-height: 360px;"></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    const byId = (id) => document.getElementById(id);
+    const usd = new Intl.NumberFormat("vi-VN", { style: "currency", currency: "USD", currencyDisplay: "code" });
+    const numFmt = new Intl.NumberFormat("vi-VN", { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+    const TODAY_ISO = "2026-11-17";
+
+    // =========================================================================
+    // BƯỚC 4: CHUẨN HÓA CẤU TRÚC DỮ LIỆU MẪU CHO FRONTEND (fixedContract & hourlyContract)
+    // Giữ tên thuộc tính (key) khớp chính xác với tên cột trong SQL 7 bảng.
+    // =========================================================================
+    function createInitialData() {
+      const fixedContract = {
+        id: 1,
+        title: "Thiết kế Website Bán Hàng",
+        client_name: "Demo Studio 1 · Công ty TNHH Thương mại Điện tử Việt",
+        freelancer_name: "Trần Quang Huy · #5",
+        contract_type: "FIXED",
+        total_budget: 3000.00,
+        hourly_rate: null,
+        status: "ACTIVE",
+        created_at: "2026-09-20T09:00:00+07:00",
+        milestones: [
+          {
+            id: 1,
+            contract_id: 1,
+            title: "Milestone 1: Thiết kế UI/UX & Khởi tạo Cơ sở dữ liệu",
+            amount: 1000.00,
+            due_date: "2026-10-05",
+            status: "APPROVED",
+            escrow: {
+              id: 1,
+              milestone_id: 1,
+              amount: 1000.00,
+              status: "RELEASED",
+              funded_at: "2026-09-21T10:00:00+07:00",
+              released_at: "2026-10-05T16:00:00+07:00"
+            }
+          },
+          {
+            id: 2,
+            contract_id: 1,
+            title: "Milestone 2: Xây dựng Giỏ hàng & Tích hợp Cổng thanh toán",
+            amount: 1000.00,
+            due_date: "2026-11-25",
+            status: "SUBMITTED",
+            escrow: {
+              id: 2,
+              milestone_id: 2,
+              amount: 1000.00,
+              status: "FUNDED",
+              funded_at: "2026-10-06T10:00:00+07:00",
+              released_at: null
+            }
+          },
+          {
+            id: 3,
+            contract_id: 1,
+            title: "Milestone 3: Kiểm thử Bảo mật, Tối ưu SEO & Bàn giao Production",
+            amount: 1000.00,
+            due_date: "2026-10-15",
+            status: "IN_PROGRESS",
+            escrow: {
+              id: 3,
+              milestone_id: 3,
+              amount: 1000.00,
+              status: "UNFUNDED",
+              funded_at: null,
+              released_at: null
+            }
+          }
+        ],
+        invoices: [
+          {
+            id: 2,
+            contract_id: 1,
+            milestone_id: 1,
+            invoice_number: "INV-2026-002",
+            total_amount: 1000.00,
+            issued_date: "2026-10-05",
+            due_date: "2026-10-12",
+            status: "PAID"
+          }
+        ],
+        payments: [
+          {
+            id: 2,
+            invoice_id: 2,
+            paid_amount: 1000.00,
+            payment_method: "ESCROW_RELEASE",
+            status: "SUCCESS",
+            paid_at: "2026-10-05T16:05:00+07:00"
+          }
+        ],
+        reviews: [
+          {
+            id: 1,
+            contract_id: 1,
+            reviewer_role: "CLIENT",
+            rating: 5,
+            comment: "Giao diện thiết kế chuẩn mực, cấu trúc CSDL rõ ràng và bàn giao Milestone 1 đúng tiến độ cam kết.",
+            created_at: "2026-10-06T09:30:00+07:00"
+          }
+        ]
+      };
+
+      const hourlyContract = {
+        id: 2,
+        title: "Bảo trì & Tối ưu Backend",
+        client_name: "Demo Studio 2 · Fintech Core Solutions",
+        freelancer_name: "Trần Quang Huy · #5",
+        contract_type: "HOURLY",
+        total_budget: null,
+        hourly_rate: 25.00,
+        status: "ACTIVE",
+        created_at: "2026-10-01T08:30:00+07:00",
+        time_entries: [
+          {
+            id: 1,
+            contract_id: 2,
+            invoice_id: 1,
+            work_date: "2026-10-16",
+            hours: 4.00,
+            description: "Tối ưu chỉ mục (Index) PostgreSQL và xử lý truy vấn chậm",
+            status: "APPROVED"
+          },
+          {
+            id: 2,
+            contract_id: 2,
+            invoice_id: 1,
+            work_date: "2026-10-18",
+            hours: 3.50,
+            description: "Cấu hình Connection Pool và Refactor API FastAPI",
+            status: "APPROVED"
+          },
+          {
+            id: 3,
+            contract_id: 2,
+            invoice_id: 1,
+            work_date: "2026-10-19",
+            hours: 2.50,
+            description: "Viết Unit Test kiểm thử tải và vá lỗi bảo mật phân quyền",
+            status: "APPROVED"
+          },
+          {
+            id: 4,
+            contract_id: 2,
+            invoice_id: null,
+            work_date: "2026-11-10",
+            hours: 3.50,
+            description: "Thiết lập Redis Caching cho endpoint tìm kiếm công việc",
+            status: "APPROVED"
+          },
+          {
+            id: 5,
+            contract_id: 2,
+            invoice_id: null,
+            work_date: "2026-11-12",
+            hours: 2.50,
+            description: "Tối ưu hóa truy vấn đối soát thanh toán và xuất báo cáo định kỳ",
+            status: "APPROVED"
+          }
+        ],
+        invoices: [
+          {
+            id: 1,
+            contract_id: 2,
+            milestone_id: null,
+            invoice_number: "INV-2026-001",
+            total_amount: 250.00,
+            issued_date: "2026-10-20",
+            due_date: "2026-10-27",
+            status: "PAID"
+          },
+          {
+            id: 3,
+            contract_id: 2,
+            milestone_id: null,
+            invoice_number: "INV-2026-003",
+            total_amount: 500.00,
+            issued_date: "2026-11-01",
+            due_date: "2026-11-08",
+            status: "PARTIAL"
+          }
+        ],
+        payments: [
+          {
+            id: 1,
+            invoice_id: 1,
+            paid_amount: 250.00,
+            payment_method: "BANK_TRANSFER",
+            status: "SUCCESS",
+            paid_at: "2026-10-21T14:20:00+07:00"
+          },
+          {
+            id: 3,
+            invoice_id: 3,
+            paid_amount: 350.00,
+            payment_method: "CREDIT_CARD",
+            status: "SUCCESS",
+            paid_at: "2026-11-02T10:15:00+07:00"
+          },
+          {
+            id: 4,
+            invoice_id: 3,
+            paid_amount: 150.00,
+            payment_method: "CREDIT_CARD",
+            status: "FAILED",
+            paid_at: "2026-11-02T10:18:00+07:00"
+          }
+        ],
+        reviews: []
+      };
+
+      return { fixedContract, hourlyContract };
+    }
+
+    const appState = {
+      data: createInitialData(),
+      activeContractKey: "fixedContract",
+      activeTab: "progress",
+      hourlyPreviewMode: "unbilled",
+      openReviewMilestoneId: null,
+      nextIds: { milestone: 4, escrow: 4, invoice: 4, payment: 5, review: 2, timeEntry: 6 }
+    };
+
+    function getActiveContract() {
+      return appState.data[appState.activeContractKey];
+    }
+
+    function showNotice(message, tone = "success") {
+      const box = byId("action-notice");
+      byId("action-notice-text").textContent = message;
+      box.dataset.state = tone;
+      box.hidden = false;
+    }
+
+    function daysBetween(dueIso, todayIso = TODAY_ISO) {
+      const d1 = new Date(dueIso + "T00:00:00");
+      const d2 = new Date(todayIso + "T00:00:00");
+      return Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDateVN(dateStr) {
+      if (!dateStr) return "—";
+      const d = new Date(dateStr);
+      if (Number.isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+
+    // =========================================================================
+    // CẬP NHẬT HEADER & 4 THẺ KPI TỰ ĐỘNG (PHẦN 1)
+    // =========================================================================
+    function renderHeaderAndKPIs() {
+      const c = getActiveContract();
+      const isFixed = c.contract_type === "FIXED";
+
+      byId("switch-fixed-btn").setAttribute("aria-pressed", String(isFixed));
+      byId("switch-hourly-btn").setAttribute("aria-pressed", String(!isFixed));
+
+      byId("header-contract-type").textContent = isFixed
+        ? "HỢP ĐỒNG TRỌN GÓI (FIXED)"
+        : `HỢP ĐỒNG THEO GIỜ (${usd.format(c.hourly_rate)}/giờ)`;
+      byId("header-contract-id").textContent = `Mã HĐ: #${c.id}`;
+      byId("header-contract-status").textContent = `Trạng thái: ${c.status}`;
+      byId("contract-title").textContent = c.title;
+      byId("contract-client").textContent = c.client_name;
+      byId("contract-freelancer").textContent = c.freelancer_name;
+      byId("contract-created").textContent = formatDateVN(c.created_at);
+
+      if (isFixed) {
+        const totalBudget = Number(c.total_budget || 0);
+        const escrowFunded = c.milestones
+          .filter((m) => m.escrow && m.escrow.status === "FUNDED")
+          .reduce((sum, m) => sum + Number(m.escrow.amount), 0);
+        const paidAmount = c.payments
+          .filter((p) => p.status === "SUCCESS")
+          .reduce((sum, p) => sum + Number(p.paid_amount), 0);
+        const unfundedRemaining = Math.max(0, totalBudget - paidAmount - escrowFunded);
+        const unpaidRemaining = Math.max(0, totalBudget - paidAmount);
+        const fundedCount = c.milestones.filter((m) => m.escrow?.status === "FUNDED").length;
+        const approvedCount = c.milestones.filter((m) => m.status === "APPROVED").length;
+
+        byId("kpi-total-label").textContent = "Tổng giá trị hợp đồng";
+        byId("kpi-total-tag").textContent = "FIXED";
+        byId("kpi-total-value").textContent = usd.format(totalBudget);
+        byId("kpi-total-sub").textContent = `Tổng ${c.milestones.length} cột mốc (Milestones)`;
+
+        byId("kpi-escrow-value").textContent = usd.format(escrowFunded);
+        byId("kpi-escrow-sub").textContent = `${fundedCount} cột mốc đang giữ tiền trong tài khoản ký quỹ`;
+
+        byId("kpi-paid-value").textContent = usd.format(paidAmount);
+        byId("kpi-paid-sub").textContent = `${approvedCount} cột mốc đã nghiệm thu & giải ngân`;
+
+        byId("kpi-remaining-tag").textContent = "REMAINING";
+        byId("kpi-remaining-value").textContent = usd.format(unfundedRemaining);
+        byId("kpi-remaining-sub").textContent = `Chưa nạp ký quỹ: ${usd.format(unfundedRemaining)} · Chưa giải ngân: ${usd.format(unpaidRemaining)}`;
+      } else {
+        const totalHours = c.time_entries.reduce((s, t) => s + Number(t.hours), 0);
+        const totalTimesheetValue = totalHours * Number(c.hourly_rate);
+        const unbilledEntries = c.time_entries.filter((t) => t.invoice_id === null && t.status === "APPROVED");
+        const unbilledHours = unbilledEntries.reduce((s, t) => s + Number(t.hours), 0);
+        const unbilledAmount = unbilledHours * Number(c.hourly_rate);
+        const billedEntries = c.time_entries.filter((t) => t.invoice_id !== null);
+        const billedHours = billedEntries.reduce((s, t) => s + Number(t.hours), 0);
+        const billedPaidAmount = billedHours * Number(c.hourly_rate);
+
+        byId("kpi-total-label").textContent = "Tổng giá trị chấm công";
+        byId("kpi-total-tag").textContent = "HOURLY";
+        byId("kpi-total-value").textContent = usd.format(totalTimesheetValue);
+        byId("kpi-total-sub").textContent = `Tổng ${numFmt.format(totalHours)} giờ × ${usd.format(c.hourly_rate)}/giờ`;
+
+        byId("kpi-escrow-value").textContent = usd.format(0);
+        byId("kpi-escrow-sub").textContent = `Hợp đồng theo giờ thu theo kỳ (Chờ lập HĐ: ${usd.format(unbilledAmount)})`;
+
+        byId("kpi-paid-value").textContent = usd.format(billedPaidAmount);
+        byId("kpi-paid-sub").textContent = `Đã thanh toán ${numFmt.format(billedHours)} giờ (HĐ #1 PAID)`;
+
+        byId("kpi-remaining-tag").textContent = "UNBILLED";
+        byId("kpi-remaining-value").textContent = usd.format(unbilledAmount);
+        byId("kpi-remaining-sub").textContent = `${numFmt.format(unbilledHours)} giờ đã duyệt (APPROVED) chưa xuất hóa đơn`;
+      }
+
+      // Cập nhật badge số lượng trên các Tab
+      byId("badge-count-progress").textContent = isFixed ? String(c.milestones.length) : String(c.time_entries.length);
+      const totalInvoices = appState.data.fixedContract.invoices.length + appState.data.hourlyContract.invoices.length;
+      byId("badge-count-history").textContent = String(totalInvoices);
+      const totalReviews = appState.data.fixedContract.reviews.length + appState.data.hourlyContract.reviews.length;
+      byId("badge-count-reviews").textContent = String(totalReviews);
+    }
+
+    // =========================================================================
+    // BƯỚC 6: BỘ CHUYỂN ĐỔI TRẠNG THÁI MILESTONE & ESCROW (STATE MACHINE)
+    // =========================================================================
+    function getMilestoneStepInfo(m) {
+      const eStatus = m.escrow ? m.escrow.status : "UNFUNDED";
+      if (m.status === "APPROVED") {
+        return {
+          step: 4,
+          btnLabel: "Gửi đánh giá (Review)",
+          btnClass: "button-outline",
+          action: "OPEN_REVIEW",
+          hint: "Bước 4: Cột mốc đã hoàn tất (APPROVED) & giải ngân (RELEASED)."
+        };
+      }
+      if (m.status === "SUBMITTED" && eStatus === "FUNDED") {
+        return {
+          step: 3,
+          btnLabel: "Nghiệm thu & Giải ngân",
+          btnClass: "button-green",
+          action: "APPROVE_AND_RELEASE",
+          hint: "Bước 3: Freelancer đã nộp bài (SUBMITTED). Bấm để giải ngân Escrow và tự động sinh Invoice + Payment."
+        };
+      }
+      if (m.status === "IN_PROGRESS" && eStatus === "FUNDED") {
+        return {
+          step: 2,
+          btnLabel: "Nộp sản phẩm (Submit Work)",
+          btnClass: "button-lime",
+          action: "SUBMIT_WORK",
+          hint: "Bước 2: Đã nạp ký quỹ (FUNDED) & đang thực hiện (IN_PROGRESS)."
+        };
+      }
+      // Bước 1: Milestone PENDING (hoặc IN_PROGRESS chưa nạp quỹ) + Escrow UNFUNDED
+      return {
+        step: 1,
+        btnLabel: "Nạp ký quỹ (Fund Escrow)",
+        btnClass: "button-green",
+        action: "FUND_ESCROW",
+        hint: "Bước 1: Ký quỹ đang UNFUNDED. Bấm để nạp tiền vào Escrow (FUNDED) và chuyển sang IN_PROGRESS."
+      };
+    }
+
+    function handleMilestoneAction(milestoneId, actionType) {
+      const fc = appState.data.fixedContract;
+      const m = fc.milestones.find((item) => item.id === milestoneId);
+      if (!m) return;
+
+      const nowIso = new Date().toISOString();
+
+      if (actionType === "FUND_ESCROW") {
+        // Bước 1: Escrow UNFUNDED -> FUNDED; KPI Đang giữ ký quỹ cộng thêm tiền; Milestone -> IN_PROGRESS
+        m.escrow.status = "FUNDED";
+        m.escrow.funded_at = nowIso;
+        m.status = "IN_PROGRESS";
+        showNotice(
+          `[Bước 1 Hoàn tất] Đã nạp ký quỹ ${usd.format(m.amount)} cho "${m.title}". Escrow đổi thành FUNDED, KPI Đang giữ ký quỹ +${usd.format(m.amount)}, Milestone chuyển sang IN_PROGRESS.`,
+          "success"
+        );
+      } else if (actionType === "SUBMIT_WORK") {
+        // Bước 2: Milestone IN_PROGRESS + Escrow FUNDED -> SUBMITTED
+        m.status = "SUBMITTED";
+        showNotice(
+          `[Bước 2 Hoàn tất] Freelancer đã nộp sản phẩm cho "${m.title}". Trạng thái Milestone đổi sang SUBMITTED (chờ khách hàng nghiệm thu).`,
+          "success"
+        );
+      } else if (actionType === "APPROVE_AND_RELEASE") {
+        // Bước 3: Milestone SUBMITTED + Escrow FUNDED -> Escrow RELEASED, Milestone APPROVED,
+        // KPI Đang giữ ký quỹ trừ đi và cộng sang Đã giải ngân; tự động sinh 1 bản ghi mới trong tab Invoices và Payments.
+        m.escrow.status = "RELEASED";
+        m.escrow.released_at = nowIso;
+        m.status = "APPROVED";
+
+        const newInvId = appState.nextIds.invoice++;
+        const invNumber = `INV-2026-00${newInvId}`;
+        fc.invoices.push({
+          id: newInvId,
+          contract_id: fc.id,
+          milestone_id: m.id,
+          invoice_number: invNumber,
+          total_amount: m.amount,
+          issued_date: TODAY_ISO,
+          due_date: TODAY_ISO,
+          status: "PAID"
+        });
+
+        const newPayId = appState.nextIds.payment++;
+        fc.payments.push({
+          id: newPayId,
+          invoice_id: newInvId,
+          paid_amount: m.amount,
+          payment_method: "ESCROW_RELEASE",
+          status: "SUCCESS",
+          paid_at: nowIso
+        });
+
+        showNotice(
+          `[Bước 3 Hoàn tất] Đã nghiệm thu & giải ngân ${usd.format(m.amount)} cho "${m.title}". Escrow -> RELEASED, Milestone -> APPROVED; tự động sinh Hóa đơn ${invNumber} và Giao dịch thanh toán #${newPayId}!`,
+          "success"
+        );
+      } else if (actionType === "OPEN_REVIEW") {
+        // Bước 4: Mở khung chọn 1-5 sao và ô nhập bình luận
+        appState.openReviewMilestoneId = appState.openReviewMilestoneId === m.id ? null : m.id;
+      }
+
+      renderAll();
+    }
+
+    function setMilestonePresetState(milestoneId, preset) {
+      const fc = appState.data.fixedContract;
+      const m = fc.milestones.find((item) => item.id === milestoneId);
+      if (!m) return;
+
+      if (preset === "STEP1") {
+        m.status = "PENDING";
+        m.escrow.status = "UNFUNDED";
+        m.escrow.funded_at = null;
+        m.escrow.released_at = null;
+        showNotice(`Đã đặt "${m.title}" về Bước 1 (Milestone PENDING + Escrow UNFUNDED) để thử nút Nạp ký quỹ.`, "warn");
+      } else if (preset === "STEP2") {
+        m.status = "IN_PROGRESS";
+        m.escrow.status = "FUNDED";
+        m.escrow.funded_at = "2026-10-06T10:00:00+07:00";
+        m.escrow.released_at = null;
+        showNotice(`Đã đặt "${m.title}" về Bước 2 (Milestone IN_PROGRESS + Escrow FUNDED) để thử nút Nộp sản phẩm.`, "warn");
+      } else if (preset === "STEP3") {
+        m.status = "SUBMITTED";
+        m.escrow.status = "FUNDED";
+        m.escrow.funded_at = "2026-10-06T10:00:00+07:00";
+        m.escrow.released_at = null;
+        showNotice(`Đã đặt "${m.title}" về Bước 3 (Milestone SUBMITTED + Escrow FUNDED) để thử nút Nghiệm thu & Giải ngân.`, "warn");
+      }
+      renderAll();
+    }
+
+    // =========================================================================
+    // RENDER TAB 1: TIẾN ĐỘ & THANH TOÁN (FIXED & HOURLY)
+    // =========================================================================
+    function renderProgressTab() {
+      const c = getActiveContract();
+      const isFixed = c.contract_type === "FIXED";
+      byId("fixed-progress-view").hidden = !isFixed;
+      byId("hourly-progress-view").hidden = isFixed;
+
+      if (isFixed) {
+        const container = byId("milestone-list-container");
+        container.replaceChildren();
+
+        c.milestones.forEach((m) => {
+          const overdueDays = daysBetween(m.due_date, TODAY_ISO);
+          const isOverdue = overdueDays > 0 && m.status !== "APPROVED";
+          const stepInfo = getMilestoneStepInfo(m);
+
+          const li = document.createElement("li");
+          li.className = "milestone-card";
+          li.dataset.status = m.status;
+          li.dataset.overdue = String(isOverdue);
+
+          const topDiv = document.createElement("div");
+          topDiv.className = "milestone-top";
+
+          const leftHead = document.createElement("div");
+          leftHead.className = "milestone-heading";
+
+          const metaRow = document.createElement("div");
+          metaRow.className = "milestone-meta";
+          metaRow.innerHTML = `
+            <span><strong>Milestone #${m.id}</strong></span>
+            <span>·</span>
+            <span>Hạn chót: <strong>${formatDateVN(m.due_date)}</strong></span>
+            <span class="badge badge-${m.status.toLowerCase()}">Milestone: ${m.status}</span>
+            <span class="badge badge-${m.escrow.status.toLowerCase()}">Escrow: ${m.escrow.status}</span>
+            ${isOverdue ? `<span class="badge badge-overdue">Quá hạn ${overdueDays} ngày (Truy vấn 1)</span>` : ""}
+          `;
+
+          const titleEl = document.createElement("h3");
+          titleEl.className = "milestone-title";
+          titleEl.textContent = m.title;
+
+          leftHead.append(metaRow, titleEl);
+
+          const rightBox = document.createElement("div");
+          rightBox.className = "milestone-amount-box";
+          rightBox.innerHTML = `
+            <div class="milestone-amount">${usd.format(m.amount)}</div>
+            <div class="milestone-due">${stepInfo.hint}</div>
+          `;
+
+          topDiv.append(leftHead, rightBox);
+
+          // Stepper 4 bước
+          const stepper = document.createElement("div");
+          stepper.className = "stepper";
+          const stepLabels = [
+            "1. PENDING + UNFUNDED",
+            "2. IN_PROGRESS + FUNDED",
+            "3. SUBMITTED + FUNDED",
+            "4. APPROVED + RELEASED"
+          ];
+          stepLabels.forEach((label, idx) => {
+            const sNum = idx + 1;
+            const sDiv = document.createElement("div");
+            sDiv.className = "step-item";
+            if (sNum < stepInfo.step) sDiv.dataset.done = "true";
+            if (sNum === stepInfo.step) sDiv.dataset.active = "true";
+            sDiv.innerHTML = `<span class="step-dot">${sNum < stepInfo.step ? "✓" : sNum}</span><span>${label}</span>`;
+            stepper.append(sDiv);
+          });
+
+          // Footer hành động
+          const footer = document.createElement("div");
+          footer.className = "milestone-footer";
+
+          const escrowInfo = document.createElement("div");
+          escrowInfo.className = "escrow-info";
+          escrowInfo.innerHTML = `
+            <span>Mã ký quỹ: <strong>#${m.escrow.id}</strong></span>
+            <span>· Nạp lúc: <strong>${m.escrow.funded_at ? formatDateVN(m.escrow.funded_at) : "Chưa nạp"}</strong></span>
+            <span>· Giải ngân lúc: <strong>${m.escrow.released_at ? formatDateVN(m.escrow.released_at) : "Chưa giải ngân"}</strong></span>
+          `;
+
+          const actions = document.createElement("div");
+          actions.className = "milestone-actions";
+
+          // Nút chuyển nhanh trạng thái để giảng viên/sinh viên test mọi bước
+          if (stepInfo.step !== 1) {
+            const btnReset1 = document.createElement("button");
+            btnReset1.type = "button";
+            btnReset1.className = "button button-outline button-sm";
+            btnReset1.textContent = "Đặt về Bước 1";
+            btnReset1.addEventListener("click", () => setMilestonePresetState(m.id, "STEP1"));
+            actions.append(btnReset1);
+          }
+          if (stepInfo.step === 1 && m.status === "IN_PROGRESS") {
+            const btnPreset2 = document.createElement("button");
+            btnPreset2.type = "button";
+            btnPreset2.className = "button button-outline button-sm";
+            btnPreset2.textContent = "Chuyển sang Bước 2 (FUNDED)";
+            btnPreset2.addEventListener("click", () => setMilestonePresetState(m.id, "STEP2"));
+            actions.append(btnPreset2);
+          }
+
+          // Nút chính theo State Machine
+          const mainBtn = document.createElement("button");
+          mainBtn.type = "button";
+          mainBtn.className = `button ${stepInfo.btnClass}`;
+          mainBtn.textContent = stepInfo.btnLabel;
+          mainBtn.addEventListener("click", () => handleMilestoneAction(m.id, stepInfo.action));
+          actions.append(mainBtn);
+
+          footer.append(escrowInfo, actions);
+          li.append(topDiv, stepper, footer);
+
+          // Nếu đang mở khung đánh giá ở Bước 4
+          if (appState.openReviewMilestoneId === m.id) {
+            const reviewForm = document.createElement("form");
+            reviewForm.className = "inline-review-box";
+            reviewForm.innerHTML = `
+              <h4>Đánh giá sau nghiệm thu cho "${m.title}"</h4>
+              <div class="inline-review-grid">
+                <label class="form-field">
+                  <span>Vai trò (reviewer_role)</span>
+                  <select name="role">
+                    <option value="CLIENT">CLIENT (Khách hàng)</option>
+                    <option value="FREELANCER">FREELANCER (Người làm)</option>
+                  </select>
+                </label>
+                <label class="form-field">
+                  <span>Điểm sao (1–5)</span>
+                  <select name="rating">
+                    <option value="5">5 Sao (★★★★★)</option>
+                    <option value="4">4 Sao (★★★★☆)</option>
+                    <option value="3">3 Sao (★★★☆☆)</option>
+                    <option value="2">2 Sao (★★☆☆☆)</option>
+                    <option value="1">1 Sao (★☆☆☆☆)</option>
+                  </select>
+                </label>
+                <label class="form-field">
+                  <span>Nhận xét (comment)</span>
+                  <input type="text" name="comment" placeholder="Nhập nhận xét nghiệm thu cột mốc này..." required>
+                </label>
+              </div>
+              <div class="milestone-actions">
+                <button type="submit" class="button button-green button-sm">Lưu đánh giá vào Reviews</button>
+              </div>
+            `;
+            reviewForm.addEventListener("submit", (ev) => {
+              ev.preventDefault();
+              const fd = new FormData(reviewForm);
+              const commentText = String(fd.get("comment") || "").trim();
+              if (!commentText) return;
+              c.reviews.push({
+                id: appState.nextIds.review++,
+                contract_id: c.id,
+                reviewer_role: String(fd.get("role") || "CLIENT"),
+                rating: Number(fd.get("rating") || 5),
+                comment: commentText,
+                created_at: new Date().toISOString()
+              });
+              appState.openReviewMilestoneId = null;
+              showNotice(`[Bước 4 Hoàn tất] Đã thêm đánh giá mới vào danh sách Reviews của hợp đồng!`, "success");
+              renderAll();
+            });
+            li.append(reviewForm);
+          }
+
+          container.append(li);
+        });
+      } else {
+        // Render Hourly Contract Time Entries & Hourly Invoice Preview
+        const tbody = byId("time-entries-tbody");
+        const tfoot = byId("time-entries-tfoot");
+        tbody.replaceChildren();
+
+        let sumHours = 0;
+        let sumAmount = 0;
+
+        c.time_entries.forEach((t) => {
+          const lineTotal = Number(t.hours) * Number(c.hourly_rate);
+          sumHours += Number(t.hours);
+          sumAmount += lineTotal;
+
+          const tr = document.createElement("tr");
+          const invBadge = t.invoice_id
+            ? `<span class="badge badge-paid">Đã lập HĐ #${t.invoice_id} (PAID)</span>`
+            : `<span class="badge badge-in_progress">Chưa lập HĐ (invoice_id = NULL)</span>`;
+          tr.innerHTML = `
+            <td><strong>#${t.id}</strong></td>
+            <td>${formatDateVN(t.work_date)}</td>
+            <td>${t.description}</td>
+            <td class="num">${numFmt.format(t.hours)} giờ</td>
+            <td class="num"><strong>${usd.format(lineTotal)}</strong></td>
+            <td><span class="badge badge-approved">${t.status}</span></td>
+            <td>${invBadge}</td>
+          `;
+          tbody.append(tr);
+        });
+
+        tfoot.innerHTML = `
+          <tr>
+            <td colspan="3">Tổng cộng (${c.time_entries.length} dòng chấm công · Đơn giá ${usd.format(c.hourly_rate)}/giờ)</td>
+            <td class="num">${numFmt.format(sumHours)} giờ</td>
+            <td class="num">${usd.format(sumAmount)}</td>
+            <td colspan="2"></td>
+          </tr>
+        `;
+
+        renderHourlyInvoicePreview(c);
+      }
+    }
+
+    function renderHourlyInvoicePreview(c) {
+      const isUnbilledMode = appState.hourlyPreviewMode === "unbilled";
+      const unbilledRows = c.time_entries.filter((t) => t.invoice_id === null && t.status === "APPROVED");
+      const billedRows = c.time_entries.filter((t) => t.invoice_id === 1);
+
+      byId("preview-mode-unbilled").textContent = `Giờ chưa lập HĐ (${unbilledRows.reduce((s, r) => s + Number(r.hours), 0)}h)`;
+      byId("preview-mode-billed").textContent = `HĐ đã xuất #1 (${billedRows.reduce((s, r) => s + Number(r.hours), 0)}h)`;
+
+      const targetRows = isUnbilledMode ? unbilledRows : billedRows;
+      const linesUl = byId("hourly-invoice-lines");
+      linesUl.replaceChildren();
+
+      byId("hourly-preview-title").textContent = isUnbilledMode
+        ? "Dự thảo Hóa đơn (Giờ chưa lập HĐ)"
+        : "Hóa đơn #1 (INV-2026-001 · PAID)";
+
+      if (!targetRows.length) {
+        const emptyLi = document.createElement("li");
+        emptyLi.className = "invoice-line";
+        emptyLi.textContent = "Tất cả giờ chấm công đã được xuất hóa đơn.";
+        linesUl.append(emptyLi);
+      } else {
+        targetRows.forEach((row) => {
+          const li = document.createElement("li");
+          li.className = "invoice-line";
+          const lineAmt = Number(row.hours) * Number(c.hourly_rate);
+          li.innerHTML = `
+            <div>
+              <strong>${formatDateVN(row.work_date)}</strong> · ${row.description}
+              <div style="color: var(--muted); font-size: 0.78rem;">${numFmt.format(row.hours)} giờ × ${usd.format(c.hourly_rate)}/giờ</div>
+            </div>
+            <strong class="num">${usd.format(lineAmt)}</strong>
+          `;
+          linesUl.append(li);
+        });
+      }
+
+      const totalHrs = targetRows.reduce((s, r) => s + Number(r.hours), 0);
+      const totalAmt = totalHrs * Number(c.hourly_rate);
+      byId("hourly-invoice-summary").innerHTML = `
+        <div class="invoice-summary-row">
+          <span>Tổng số giờ làm việc:</span>
+          <strong>${numFmt.format(totalHrs)} giờ</strong>
+        </div>
+        <div class="invoice-summary-row">
+          <span>Đơn giá theo hợp đồng (hourly_rate):</span>
+          <strong>${usd.format(c.hourly_rate)} / giờ</strong>
+        </div>
+        <div class="invoice-summary-row">
+          <span>Trạng thái hóa đơn:</span>
+          <span class="badge ${isUnbilledMode ? "badge-in_progress" : "badge-paid"}">
+            ${isUnbilledMode ? "CHƯA LẬP HÓA ĐƠN (NULL)" : "ĐÃ THANH TOÁN (PAID)"}
+          </span>
+        </div>
+        <div class="invoice-summary-row total">
+          <span>Tổng cộng tự động:</span>
+          <span>${usd.format(totalAmt)}</span>
+        </div>
+      `;
+
+      const genBtn = byId("generate-hourly-invoice-btn");
+      genBtn.hidden = !isUnbilledMode;
+      genBtn.disabled = unbilledRows.length === 0;
+    }
+
+    // =========================================================================
+    // RENDER TAB 2: LỊCH SỬ HÓA ĐƠN & GIAO DỊCH
+    // =========================================================================
+    function renderHistoryTab() {
+      const showAll = byId("show-all-invoices-toggle").checked;
+      const activeC = getActiveContract();
+
+      const allInvoices = [
+        ...appState.data.fixedContract.invoices,
+        ...appState.data.hourlyContract.invoices
+      ].sort((a, b) => a.id - b.id);
+
+      const allPayments = [
+        ...appState.data.fixedContract.payments,
+        ...appState.data.hourlyContract.payments
+      ].sort((a, b) => a.id - b.id);
+
+      const invoicesToShow = showAll
+        ? allInvoices
+        : allInvoices.filter((inv) => inv.contract_id === activeC.id);
+
+      const invTbody = byId("invoices-tbody");
+      invTbody.replaceChildren();
+
+      invoicesToShow.forEach((inv) => {
+        const paidSuccess = allPayments
+          .filter((p) => p.invoice_id === inv.id && p.status === "SUCCESS")
+          .reduce((s, p) => s + Number(p.paid_amount), 0);
+        const diff = Number(inv.total_amount) - paidSuccess;
+        const contractTitle = inv.contract_id === 1
+          ? appState.data.fixedContract.title
+          : appState.data.hourlyContract.title;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>#${inv.id}</strong></td>
+          <td><strong>${inv.invoice_number}</strong></td>
+          <td>
+            HĐ #${inv.contract_id}: ${contractTitle}
+            ${inv.milestone_id ? `<div style="font-size: 0.78rem; color: var(--muted);">Gắn Milestone #${inv.milestone_id}</div>` : `<div style="font-size: 0.78rem; color: var(--muted);">Hóa đơn theo giờ / Đối soát</div>`}
+          </td>
+          <td>${formatDateVN(inv.issued_date)}</td>
+          <td>${formatDateVN(inv.due_date)}</td>
+          <td class="num"><strong>${usd.format(inv.total_amount)}</strong></td>
+          <td class="num" style="color: #165b37; font-weight: 680;">${usd.format(paidSuccess)}</td>
+          <td class="num">
+            ${diff !== 0
+              ? `<span class="badge badge-overdue">Thiếu ${usd.format(diff)}</span>`
+              : `<span class="badge badge-paid">Khớp (0 USD)</span>`}
+          </td>
+          <td><span class="badge badge-${inv.status.toLowerCase()}">${inv.status}</span></td>
+          <td id="inv-action-${inv.id}"></td>
+        `;
+
+        if (diff > 0) {
+          const actionTd = tr.querySelector(`#inv-action-${inv.id}`);
+          const settleBtn = document.createElement("button");
+          settleBtn.type = "button";
+          settleBtn.className = "button button-green button-sm";
+          settleBtn.textContent = `Thu đủ ${usd.format(diff)}`;
+          settleBtn.addEventListener("click", () => {
+            const targetContract = inv.contract_id === 1 ? appState.data.fixedContract : appState.data.hourlyContract;
+            targetContract.payments.push({
+              id: appState.nextIds.payment++,
+              invoice_id: inv.id,
+              paid_amount: diff,
+              payment_method: "BANK_TRANSFER",
+              status: "SUCCESS",
+              paid_at: new Date().toISOString()
+            });
+            inv.status = "PAID";
+            showNotice(`Đã thu bổ sung ${usd.format(diff)} cho hóa đơn ${inv.invoice_number}. Đối soát đã khớp hoàn toàn!`, "success");
+            renderAll();
+          });
+          actionTd.append(settleBtn);
+        } else {
+          tr.querySelector(`#inv-action-${inv.id}`).innerHTML = `<span style="color: var(--muted); font-size: 0.8rem;">Hoàn tất</span>`;
+        }
+
+        invTbody.append(tr);
+      });
+
+      const payTbody = byId("payments-tbody");
+      payTbody.replaceChildren();
+      const visibleInvoiceIds = new Set(invoicesToShow.map((i) => i.id));
+      allPayments
+        .filter((p) => visibleInvoiceIds.has(p.invoice_id))
+        .forEach((p) => {
+          const inv = allInvoices.find((i) => i.id === p.invoice_id);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>#${p.id}</strong></td>
+            <td><strong>${inv ? inv.invoice_number : "#" + p.invoice_id}</strong> (ID: ${p.invoice_id})</td>
+            <td><code>${p.payment_method}</code></td>
+            <td>${formatDateVN(p.paid_at)}</td>
+            <td class="num"><strong>${usd.format(p.paid_amount)}</strong></td>
+            <td><span class="badge badge-${p.status.toLowerCase()}">${p.status}</span></td>
+          `;
+          payTbody.append(tr);
+        });
+    }
+
+    // =========================================================================
+    // RENDER TAB 3: ĐÁNH GIÁ (REVIEWS)
+    // =========================================================================
+    function renderReviewsTab() {
+      const allReviews = [
+        ...appState.data.fixedContract.reviews,
+        ...appState.data.hourlyContract.reviews
+      ].sort((a, b) => b.id - a.id);
+
+      const avg = allReviews.length
+        ? (allReviews.reduce((s, r) => s + Number(r.rating), 0) / allReviews.length).toFixed(1)
+        : "0.0";
+      byId("reviews-summary-subtitle").textContent = `Tổng số: ${allReviews.length} bản ghi đánh giá · Điểm trung bình: ${avg} / 5.0 ★`;
+
+      const listEl = byId("reviews-list-container");
+      listEl.replaceChildren();
+
+      allReviews.forEach((r) => {
+        const cTitle = r.contract_id === 1 ? appState.data.fixedContract.title : appState.data.hourlyContract.title;
+        const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+        const li = document.createElement("li");
+        li.className = "review-card";
+        li.innerHTML = `
+          <div class="review-header">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="badge badge-approved">${r.reviewer_role}</span>
+              <strong>Hợp đồng #${r.contract_id}: ${cTitle}</strong>
+              <span style="color: var(--muted); font-size: 0.8rem;">· Ngày: ${formatDateVN(r.created_at)}</span>
+            </div>
+            <span class="stars" aria-label="${r.rating} trên 5 sao">${stars} (${r.rating}/5)</span>
+          </div>
+          <p style="color: var(--ink); font-size: 0.92rem;">"${r.comment}"</p>
+        `;
+        listEl.append(li);
+      });
+    }
+
+    // =========================================================================
+    // RENDER TAB 4: 4 TRUY VẤN SQL NGHIỆP VỤ & JSON CHUẨN HÓA (PHASE 3)
+    // =========================================================================
+    function renderSqlAndJsonTab() {
+      const fc = appState.data.fixedContract;
+      const hc = appState.data.hourlyContract;
+
+      // Q1: Milestone quá hạn (due_date < CURRENT_DATE AND status <> 'APPROVED')
+      const q1Tbody = byId("sql-q1-tbody");
+      q1Tbody.replaceChildren();
+      const overdueMilestones = fc.milestones.filter(
+        (m) => daysBetween(m.due_date, TODAY_ISO) > 0 && m.status !== "APPROVED"
+      );
+      if (!overdueMilestones.length) {
+        q1Tbody.innerHTML = `<tr><td colspan="5" style="color: var(--muted);">Không còn Milestone nào quá hạn (Tất cả đã APPROVED).</td></tr>`;
+      } else {
+        overdueMilestones.forEach((m) => {
+          const days = daysBetween(m.due_date, TODAY_ISO);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>#${m.id}</strong></td>
+            <td>${m.title}</td>
+            <td>${m.due_date}</td>
+            <td><span class="badge badge-${m.status.toLowerCase()}">${m.status}</span></td>
+            <td class="num"><span class="badge badge-overdue">${days} ngày</span></td>
+          `;
+          q1Tbody.append(tr);
+        });
+      }
+
+      // Q2: Giờ chưa lập hóa đơn (invoice_id IS NULL AND status = 'APPROVED')
+      const q2Tbody = byId("sql-q2-tbody");
+      q2Tbody.replaceChildren();
+      const unbilled = hc.time_entries.filter((t) => t.invoice_id === null && t.status === "APPROVED");
+      if (!unbilled.length) {
+        q2Tbody.innerHTML = `<tr><td colspan="5" style="color: var(--muted);">Không còn dòng chấm công nào chưa lập hóa đơn.</td></tr>`;
+      } else {
+        unbilled.forEach((t) => {
+          const amt = Number(t.hours) * Number(hc.hourly_rate);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>#${t.id}</strong></td>
+            <td>${t.work_date}</td>
+            <td>${t.description}</td>
+            <td class="num">${numFmt.format(t.hours)}h × ${usd.format(hc.hourly_rate)}</td>
+            <td class="num"><strong>${usd.format(amt)}</strong></td>
+          `;
+          q2Tbody.append(tr);
+        });
+      }
+
+      // Q3: Đối soát thanh toán
+      const q3Tbody = byId("sql-q3-tbody");
+      q3Tbody.replaceChildren();
+      const allInvs = [...fc.invoices, ...hc.invoices];
+      const allPays = [...fc.payments, ...hc.payments];
+      const discrepancies = allInvs
+        .map((inv) => {
+          const paid = allPays
+            .filter((p) => p.invoice_id === inv.id && p.status === "SUCCESS")
+            .reduce((s, p) => s + Number(p.paid_amount), 0);
+          return { ...inv, paid, diff: Number(inv.total_amount) - paid };
+        })
+        .filter((item) => item.diff !== 0);
+
+      if (!discrepancies.length) {
+        q3Tbody.innerHTML = `<tr><td colspan="5" style="color: var(--muted);">Tất cả hóa đơn đã thanh toán khớp 100% (Hiệu số = 0).</td></tr>`;
+      } else {
+        discrepancies.forEach((d) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>${d.invoice_number}</strong></td>
+            <td class="num">${usd.format(d.total_amount)}</td>
+            <td class="num">${usd.format(d.paid)}</td>
+            <td class="num"><strong style="color: #792924;">${usd.format(d.diff)}</strong></td>
+            <td><span class="badge badge-overdue">${d.diff > 0 ? "Trả thiếu" : "Trả thừa"}</span></td>
+          `;
+          q3Tbody.append(tr);
+        });
+      }
+
+      // Q4: Doanh thu theo kỳ (GROUP BY YYYY-MM, status = 'SUCCESS')
+      const q4Tbody = byId("sql-q4-tbody");
+      q4Tbody.replaceChildren();
+      const periodMap = new Map();
+      allPays
+        .filter((p) => p.status === "SUCCESS")
+        .forEach((p) => {
+          const period = String(p.paid_at).slice(0, 7);
+          const cur = periodMap.get(period) || { count: 0, sum: 0 };
+          cur.count += 1;
+          cur.sum += Number(p.paid_amount);
+          periodMap.set(period, cur);
+        });
+      Array.from(periodMap.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .forEach(([period, stat]) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>Kỳ ${period}</strong></td>
+            <td class="num">${stat.count} giao dịch</td>
+            <td class="num"><strong style="color: #165b37;">${usd.format(stat.sum)}</strong></td>
+          `;
+          q4Tbody.append(tr);
+        });
+
+      // Cập nhật JSON Preview
+      byId("json-preview-block").textContent = JSON.stringify(
+        {
+          fixedContract: appState.data.fixedContract,
+          hourlyContract: appState.data.hourlyContract
+        },
+        null,
+        2
+      );
+    }
+
+    // =========================================================================
+    // ĐIỀU HƯỚNG TAB & GẮN SỰ KIỆN
+    // =========================================================================
+    function switchTab(tabKey) {
+      appState.activeTab = tabKey;
+      const tabs = ["progress", "history", "reviews", "sql"];
+      tabs.forEach((k) => {
+        byId(`tab-btn-${k}`).setAttribute("aria-selected", String(k === tabKey));
+        byId(`tab-panel-${k}`).hidden = k !== tabKey;
+      });
+      document.querySelectorAll("[data-nav-tab]").forEach((btn) => {
+        if (btn.dataset.navTab === tabKey) {
+          btn.setAttribute("aria-current", "page");
+        } else {
+          btn.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    function renderAll() {
+      renderHeaderAndKPIs();
+      renderProgressTab();
+      renderHistoryTab();
+      renderReviewsTab();
+      renderSqlAndJsonTab();
+    }
+
+    // Gắn sự kiện chuyển đổi Hợp đồng
+    byId("switch-fixed-btn").addEventListener("click", () => {
+      appState.activeContractKey = "fixedContract";
+      renderAll();
+    });
+    byId("switch-hourly-btn").addEventListener("click", () => {
+      appState.activeContractKey = "hourlyContract";
+      renderAll();
+    });
+    byId("brand-home").addEventListener("click", () => {
+      switchTab("progress");
+    });
+
+    // Gắn sự kiện chuyển Tab tường minh
+    byId("tab-btn-progress").addEventListener("click", () => switchTab("progress"));
+    byId("tab-btn-history").addEventListener("click", () => switchTab("history"));
+    byId("tab-btn-reviews").addEventListener("click", () => switchTab("reviews"));
+    byId("tab-btn-sql").addEventListener("click", () => switchTab("sql"));
+    document.querySelectorAll("[data-nav-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.navTab));
+    });
+
+    // Nút Khôi phục dữ liệu mẫu
+    byId("reset-demo-btn").addEventListener("click", () => {
+      appState.data = createInitialData();
+      appState.openReviewMilestoneId = null;
+      appState.nextIds = { milestone: 4, escrow: 4, invoice: 4, payment: 5, review: 2, timeEntry: 6 };
+      showNotice("Đã khôi phục toàn bộ dữ liệu về trạng thái Seed Data ban đầu (Bước 2).", "info");
+      renderAll();
+    });
+
+    byId("close-notice-btn").addEventListener("click", () => {
+      byId("action-notice").hidden = true;
+    });
+
+    // Nút thêm Milestone mẫu ở Bước 1 (PENDING + UNFUNDED)
+    byId("add-demo-milestone-btn").addEventListener("click", () => {
+      const fc = appState.data.fixedContract;
+      const newMId = appState.nextIds.milestone++;
+      const newEId = appState.nextIds.escrow++;
+      const amount = 500.00;
+      fc.total_budget = Number(fc.total_budget) + amount;
+      fc.milestones.push({
+        id: newMId,
+        contract_id: fc.id,
+        title: `Milestone ${newMId}: Triển khai tính năng mở rộng & Bảo hành hệ thống`,
+        amount: amount,
+        due_date: "2026-12-10",
+        status: "PENDING",
+        escrow: {
+          id: newEId,
+          milestone_id: newMId,
+          amount: amount,
+          status: "UNFUNDED",
+          funded_at: null,
+          released_at: null
+        }
+      });
+      showNotice(`Đã tạo thêm Milestone #${newMId} (500$) ở trạng thái Bước 1 (PENDING + UNFUNDED). Hãy bấm "Nạp ký quỹ (Fund Escrow)"!`, "success");
+      renderAll();
+    });
+
+    // Sự kiện bên Hợp đồng theo giờ (Hourly Contract)
+    byId("toggle-add-time-btn").addEventListener("click", () => {
+      const f = byId("add-time-form");
+      f.hidden = !f.hidden;
+    });
+    byId("cancel-add-time-btn").addEventListener("click", () => {
+      byId("add-time-form").hidden = true;
+    });
+    byId("add-time-form").addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const hc = appState.data.hourlyContract;
+      const hoursVal = Number(byId("new-time-hours").value || 0);
+      const descVal = byId("new-time-desc").value.trim();
+      const dateVal = byId("new-time-date").value || TODAY_ISO;
+      if (hoursVal <= 0 || !descVal) return;
+
+      hc.time_entries.push({
+        id: appState.nextIds.timeEntry++,
+        contract_id: hc.id,
+        invoice_id: null,
+        work_date: dateVal,
+        hours: hoursVal,
+        description: descVal,
+        status: "APPROVED"
+      });
+      byId("new-time-desc").value = "";
+      byId("add-time-form").hidden = true;
+      appState.hourlyPreviewMode = "unbilled";
+      showNotice(`Đã chấm công thêm ${numFmt.format(hoursVal)} giờ (invoice_id = NULL). Khung xem trước hóa đơn đã tự động cộng dồn!`, "success");
+      renderAll();
+    });
+
+    byId("preview-mode-unbilled").addEventListener("click", () => {
+      appState.hourlyPreviewMode = "unbilled";
+      renderProgressTab();
+    });
+    byId("preview-mode-billed").addEventListener("click", () => {
+      appState.hourlyPreviewMode = "billed";
+      renderProgressTab();
+    });
+
+    byId("generate-hourly-invoice-btn").addEventListener("click", () => {
+      const hc = appState.data.hourlyContract;
+      const unbilled = hc.time_entries.filter((t) => t.invoice_id === null && t.status === "APPROVED");
+      if (!unbilled.length) return;
+
+      const totalHrs = unbilled.reduce((s, t) => s + Number(t.hours), 0);
+      const totalAmt = totalHrs * Number(hc.hourly_rate);
+      const newInvId = appState.nextIds.invoice++;
+      const invNo = `INV-2026-00${newInvId}`;
+
+      // Cập nhật invoice_id vào các dòng time_entries vừa lập hóa đơn (Đúng mấu chốt Bước 1.4)
+      unbilled.forEach((t) => {
+        t.invoice_id = newInvId;
+      });
+
+      hc.invoices.push({
+        id: newInvId,
+        contract_id: hc.id,
+        milestone_id: null,
+        invoice_number: invNo,
+        total_amount: totalAmt,
+        issued_date: TODAY_ISO,
+        due_date: TODAY_ISO,
+        status: "PAID"
+      });
+
+      const newPayId = appState.nextIds.payment++;
+      hc.payments.push({
+        id: newPayId,
+        invoice_id: newInvId,
+        paid_amount: totalAmt,
+        payment_method: "BANK_TRANSFER",
+        status: "SUCCESS",
+        paid_at: new Date().toISOString()
+      });
+
+      showNotice(
+        `Đã phát hành Hóa đơn theo giờ ${invNo} (${numFmt.format(totalHrs)} giờ = ${usd.format(totalAmt)}), cập nhật invoice_id = ${newInvId} vào bảng time_entries và ghi nhận thanh toán thành công!`,
+        "success"
+      );
+      renderAll();
+    });
+
+    byId("show-all-invoices-toggle").addEventListener("change", () => {
+      renderHistoryTab();
+    });
+
+    // Form gửi đánh giá ở Tab 3
+    byId("tab-review-form").addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const c = getActiveContract();
+      const role = byId("tab-review-role").value;
+      const rating = Number(byId("tab-review-rating").value || 5);
+      const comment = byId("tab-review-comment").value.trim();
+      if (!comment) return;
+
+      c.reviews.push({
+        id: appState.nextIds.review++,
+        contract_id: c.id,
+        reviewer_role: role,
+        rating: rating,
+        comment: comment,
+        created_at: new Date().toISOString()
+      });
+      byId("tab-review-comment").value = "";
+      showNotice(`Đã lưu đánh giá ${rating} sao (${role}) cho hợp đồng "${c.title}"!`, "success");
+      renderAll();
+    });
+
+    // Sao chép JSON
+    byId("copy-json-btn").addEventListener("click", () => {
+      const text = byId("json-preview-block").textContent;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showNotice("Đã sao chép cấu trúc JSON chuẩn hóa vào bộ nhớ tạm!", "success");
+          }).catch(() => {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      } catch {
+        fallbackCopy(text);
+      }
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showNotice("Đã sao chép cấu trúc JSON chuẩn hóa vào bộ nhớ tạm!", "success");
+      } catch {
+        showNotice("Không thể tự động sao chép, bạn có thể bôi đen khung JSON bên dưới.", "warn");
+      }
+      document.body.removeChild(ta);
+    }
+
+    // Khởi chạy lần đầu
+    renderAll();
+  </script>
+</body>
+</html>
